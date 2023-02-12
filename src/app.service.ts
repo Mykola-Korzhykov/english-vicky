@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import Context from './interfaces/context.interface'
 import { InvitesService } from './invites/invites.service'
-import { selectLanguage, mainMenu, backMenu } from './app.buttons'
+import {
+	selectLanguage,
+	mainMenu,
+	backMenu,
+	aboutChannelMenu
+} from './app.buttons'
 import { HelpersService } from './helpers/helpers.service'
-import { globalMessages } from './config/messages'
+import { globalMessages, menuMessages } from './config/messages'
 import { languages } from './config/languages'
 import { ConfigService } from '@nestjs/config'
 
@@ -15,14 +20,20 @@ export class AppService {
 		private readonly inviteService: InvitesService
 	) {}
 
-	async startCommand(ctx: Context) {
-		const locale = ctx.session.locale
-		const message = await this.helperService.replacePlaceholders(
-			globalMessages.greeting[locale],
-			{ userName: ctx.from.first_name }
-		)
+	private readonly CHANNEL_ID = this.configService.get<string>('CHANNEL_ID')
+	private readonly CHAT_ID = this.configService.get<string>('CHAT_ID')
+	private readonly TG_LINK: string = this.configService.get('TG_LINK')
+	private readonly INSTA_LINK: string = this.configService.get('INSTA_LINK')
+	private readonly EMAIL: string = this.configService.get('EMAIL')
 
-		await ctx.reply(message, await selectLanguage(ctx.session.locale))
+	async startCommand(ctx: Context) {
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			const locale = ctx.session.locale
+			const message = globalMessages.start[locale]
+
+			await ctx.reply(message, await selectLanguage(ctx.session.locale))
+		}
 	}
 
 	async getChannelAccess(ctx: Context) {
@@ -34,38 +45,54 @@ export class AppService {
 
 		await ctx.reply(linkMessage)
 
-		const inviteLink = await this.inviteService.generateInviteLink(ctx)
+		const channelInviteLink = await this.inviteService.generateInviteLink(
+			ctx,
+			'channel'
+		)
+		const chatInviteLink = await this.inviteService.generateInviteLink(
+			ctx,
+			'chat'
+		)
+
 		const successMessage = await this.helperService.replacePlaceholders(
 			globalMessages.successPay[locale],
-			{ inviteLink }
+			{ channelInviteLink, chatInviteLink }
 		)
 
 		await ctx.reply(successMessage)
-		await ctx.deleteMessage()
-		ctx.session.isPaid = true
 	}
 
 	async aboutChannel(ctx: Context) {
 		const locale = ctx.session.locale
 
-		await ctx.reply(globalMessages.aboutChannel[locale], await backMenu(locale))
+		await ctx.reply(globalMessages.aboutChannel[locale], {
+			reply_markup: await aboutChannelMenu(locale),
+			parse_mode: 'Markdown'
+		})
+
 		await ctx.deleteMessage()
 	}
 
 	async aboutChat(ctx: Context) {
 		const locale = ctx.session.locale
 
-		await ctx.reply(globalMessages.aboutChat[locale], await backMenu(locale))
+		await ctx.reply(globalMessages.aboutChat[locale], {
+			reply_markup: await (await backMenu(locale)).reply_markup,
+			parse_mode: 'Markdown'
+		})
 		await ctx.deleteMessage()
 	}
 
 	async getSupport(ctx: Context) {
 		const locale = ctx.session.locale
-		const supportLink = await this.configService.get('SUPPORT_LINK')
 
 		const message = await this.helperService.replacePlaceholders(
 			globalMessages.getSupport[locale],
-			{ supportLink }
+			{
+				telegram: this.TG_LINK,
+				instagram: this.INSTA_LINK,
+				email: this.EMAIL
+			}
 		)
 
 		await ctx.reply(message, await backMenu(locale))
@@ -84,16 +111,16 @@ export class AppService {
 			locale
 		)
 
-		const message = globalMessages.whatInteresting[locale]
+		const message = globalMessages.greeting[locale]
 
-		await ctx.reply(message, await mainMenu(localeObject))
+		ctx.reply(message, await mainMenu(localeObject))
 		await ctx.deleteMessage()
 	}
 
 	async changeLocale(ctx: Context) {
 		const locale = ctx.session.locale
 		const message = await this.helperService.replacePlaceholders(
-			globalMessages.greeting[locale],
+			globalMessages.start[locale],
 			{ userName: ctx.from.first_name }
 		)
 

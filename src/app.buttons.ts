@@ -31,7 +31,6 @@ export const mainMenu = async ({ locale, flag }: ILanguage) => {
 				menuMessages.aboutChannel[locale],
 				'about_channel'
 			),
-			Markup.button.callback(menuMessages.aboutChat[locale], 'about_chat'),
 			Markup.button.callback(menuMessages.support[locale], 'support'),
 			Markup.button.callback(changeLocaleText, 'change_locale')
 		],
@@ -44,4 +43,14 @@ export const backMenu = async (locale) => {
 		[Markup.button.callback(globalMessages.backButton[locale], 'main_menu')],
 		{ columns: 2 }
 	)
+}
+
+export const aboutChannelMenu = async (locale) => {
+	return Markup.inlineKeyboard(
+		[
+			Markup.button.callback(globalMessages.backButton[locale], 'main_menu'),
+			Markup.button.callback(menuMessages.aboutChat[locale], 'about_chat')
+		],
+		{ columns: 2 }
+	).reply_markup
 }

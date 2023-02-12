@@ -6,6 +6,7 @@ import Context from '../interfaces/context.interface'
 export class InvitesService {
 	constructor(private readonly configService: ConfigService) {}
 
+	private readonly channelId = this.configService.get<string>('CHANNEL_ID')
 	private readonly chatId = this.configService.get<string>('CHAT_ID')
 
 	private async getExpireDate() {
@@ -15,10 +16,10 @@ export class InvitesService {
 		return newDate.getTime() / 1000
 	}
 
-	async generateInviteLink(ctx: Context) {
+	async generateInviteLink(ctx: Context, type: 'channel' | 'chat') {
 		const linkName = await `${ctx.from.username} | Invite Link`
 
-		const link = await ctx.telegram.createChatInviteLink(this.chatId, {
+		const link = await ctx.telegram.createChatInviteLink(this[`${type}Id`], {
 			name: linkName,
 			expire_date: await this.getExpireDate(),
 			member_limit: 1
