@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import Context from './interfaces/context.interface'
 import { InvitesService } from './invites/invites.service'
-import {
-	selectLanguage,
-	mainMenu,
-	backMenu,
-	aboutChannelMenu
-} from './app.buttons'
+import { selectLanguage, mainMenu } from './app.buttons'
 import { HelpersService } from './helpers/helpers.service'
 import { globalMessages, menuMessages } from './config/messages'
 import { languages } from './config/languages'
@@ -30,7 +25,7 @@ export class AppService {
 		const currentChatId = String(ctx.chat.id)
 		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
 			const locale = ctx.session.locale
-			const message = globalMessages.start[locale]
+			const message = globalMessages.start.en
 
 			await ctx.reply(message, await selectLanguage(ctx.session.locale))
 		}
@@ -66,21 +61,16 @@ export class AppService {
 		const locale = ctx.session.locale
 
 		await ctx.reply(globalMessages.aboutChannel[locale], {
-			reply_markup: await aboutChannelMenu(locale),
 			parse_mode: 'Markdown'
 		})
-
-		await ctx.deleteMessage()
 	}
 
 	async aboutChat(ctx: Context) {
 		const locale = ctx.session.locale
 
 		await ctx.reply(globalMessages.aboutChat[locale], {
-			reply_markup: await (await backMenu(locale)).reply_markup,
 			parse_mode: 'Markdown'
 		})
-		await ctx.deleteMessage()
 	}
 
 	async getSupport(ctx: Context) {
@@ -95,8 +85,7 @@ export class AppService {
 			}
 		)
 
-		await ctx.reply(message, await backMenu(locale))
-		await ctx.deleteMessage()
+		await ctx.reply(message)
 	}
 
 	async selectLocale(ctx: Context, changeLocale: boolean = true) {
@@ -120,12 +109,11 @@ export class AppService {
 	async changeLocale(ctx: Context) {
 		const locale = ctx.session.locale
 		const message = await this.helperService.replacePlaceholders(
-			globalMessages.start[locale],
+			globalMessages.start.en,
 			{ userName: ctx.from.first_name }
 		)
 
 		await ctx.reply(message, await selectLanguage(ctx.session.locale))
-		await ctx.deleteMessage()
 	}
 
 	async toMenu(ctx: Context) {

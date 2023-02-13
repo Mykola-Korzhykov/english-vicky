@@ -8,20 +8,15 @@ const helperService = new HelpersService()
 
 export const selectLanguage = async (currentLocale) => {
 	const buttons = languages.map(({ flag, translate, locale }) => {
-		const text = `${flag} ${translate[currentLocale]}`
+		const text = `${flag} ${translate.en}`
 		return Markup.button.callback(text, locale)
 	})
 
 	return Markup.inlineKeyboard(buttons)
 }
 
-export const mainMenu = async ({ locale, flag }: ILanguage) => {
-	const changeLocaleText = await helperService.replacePlaceholders(
-		menuMessages.changeLocale[locale],
-		{ flag }
-	)
-
-	return Markup.inlineKeyboard(
+export const mainMenu = async ({ locale }: ILanguage) => {
+	return Markup.keyboard(
 		[
 			Markup.button.callback(
 				menuMessages.accessChannel[locale],
@@ -31,26 +26,27 @@ export const mainMenu = async ({ locale, flag }: ILanguage) => {
 				menuMessages.aboutChannel[locale],
 				'about_channel'
 			),
+			Markup.button.callback(menuMessages.aboutChat[locale], 'about_chat'),
 			Markup.button.callback(menuMessages.support[locale], 'support'),
-			Markup.button.callback(changeLocaleText, 'change_locale')
+			Markup.button.callback(menuMessages.changeLocale[locale], 'change_locale')
 		],
 		{ columns: 2 }
 	)
 }
 
-export const backMenu = async (locale) => {
-	return Markup.inlineKeyboard(
+/* export const backMenu = async (locale) => {
+	return Markup.keyboard(
 		[Markup.button.callback(globalMessages.backButton[locale], 'main_menu')],
 		{ columns: 2 }
 	)
-}
+} */
 
-export const aboutChannelMenu = async (locale) => {
-	return Markup.inlineKeyboard(
+/* export const aboutChannelMenu = async (locale) => {
+	return Markup.keyboard(
 		[
 			Markup.button.callback(globalMessages.backButton[locale], 'main_menu'),
 			Markup.button.callback(menuMessages.aboutChat[locale], 'about_chat')
 		],
 		{ columns: 2 }
 	).reply_markup
-}
+} */

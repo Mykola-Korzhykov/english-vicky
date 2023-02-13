@@ -5,6 +5,7 @@ import { Telegraf } from 'telegraf'
 import { mainMenu, selectLanguage } from './app.buttons'
 import { AppService } from './app.service'
 import { getLocales } from './config/languages'
+import { menuMessages } from './config/messages'
 import Context from './interfaces/context.interface'
 
 @Update()
@@ -24,22 +25,22 @@ export class AppUpdate {
 		this.appService.startCommand(ctx)
 	}
 
-	@Action('get_channel_access')
+	@Hears(Object.values(menuMessages.accessChannel))
 	async getChannelAccess(ctx: Context) {
 		this.appService.getChannelAccess(ctx)
 	}
 
-	@Action('about_channel')
+	@Hears(Object.values(menuMessages.aboutChannel))
 	async aboutChannel(ctx: Context) {
 		this.appService.aboutChannel(ctx)
 	}
 
-	@Action('about_chat')
+	@Hears(Object.values(menuMessages.aboutChat))
 	async aboutChat(ctx: Context) {
 		this.appService.aboutChat(ctx)
 	}
 
-	@Action('support')
+	@Hears(Object.values(menuMessages.support))
 	async getSupport(ctx: Context) {
 		this.appService.getSupport(ctx)
 	}
@@ -49,13 +50,13 @@ export class AppUpdate {
 		this.appService.selectLocale(ctx)
 	}
 
-	@Action('change_locale')
+	@Hears(Object.values(menuMessages.changeLocale))
 	async changeLocale(ctx: Context) {
 		this.appService.changeLocale(ctx)
 	}
 
-	@Action('main_menu')
+	/* @Action('main_menu')
 	async toMenu(ctx: Context) {
 		this.appService.toMenu(ctx)
-	}
+	} */
 }
