@@ -48,9 +48,9 @@ const globalMessages = {
 
 const menuMessages = {
 	accessChannel: {
-		en: '💸 Buy access',
-		ua: '💸 Оплатити доступ',
-		ru: '💸 Оплатить доступ'
+		en: '💸 Buy subscription',
+		ua: '💸 Купити підписку',
+		ru: '💸 Купить подписку'
 	},
 	aboutChannel: {
 		en: '📄 About the channel',
@@ -58,7 +58,7 @@ const menuMessages = {
 		ru: '📄 Узнать о канале'
 	},
 	aboutChat: {
-		en: '✉️ About chat',
+		en: '✉️ About the chat',
 		ua: '✉️ Дізнатися про чат',
 		ru: '✉️ Узнать о чате'
 	},
@@ -68,7 +68,7 @@ const menuMessages = {
 		ru: '❓ Поддержка'
 	},
 	changeLocale: {
-		en: '🇬🇧 Change language',
+		en: '🇬🇧 Change the language',
 		ua: '🇺🇦 Змінити мову',
 		ru: '🇷🇺 Изменить язык'
 	}
