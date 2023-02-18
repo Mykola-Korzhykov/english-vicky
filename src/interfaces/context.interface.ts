@@ -3,9 +3,9 @@ import { Callback } from './callbackQuery.interface'
 
 export default interface Context extends ContextTelegraf {
 	session: {
-		locale?: 'en' | 'ua' | 'ru'
-		isPaid?: boolean
-		isGreeting: boolean
+		locale?: string
+		orderId?: string
+		paymentId?: string
 	}
 	callbackQuery: Callback
 }

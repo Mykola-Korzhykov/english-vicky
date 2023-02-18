@@ -1,6 +1,10 @@
 import { Markup } from 'telegraf'
 import { languages } from './config/languages'
-import { globalMessages, menuMessages } from './config/messages'
+import {
+	globalMessages,
+	menuMessages,
+	paymentMessages
+} from './config/messages'
 import { HelpersService } from './helpers/helpers.service'
 import ILanguage from './interfaces/lanugage.interface'
 
@@ -15,13 +19,27 @@ export const selectLanguage = async (currentLocale) => {
 	return Markup.inlineKeyboard(buttons)
 }
 
-export const mainMenu = async ({ locale }: ILanguage) => {
-	return Markup.keyboard(
-		[
-			Markup.button.callback(
+export const mainMenu = async (
+	locale: string,
+	isSubscribe: boolean = false
+) => {
+	const getSubscribeButton = () => {
+		if (!isSubscribe) {
+			return Markup.button.callback(
 				menuMessages.accessChannel[locale],
 				'get_channel_access'
-			),
+			)
+		} else {
+			return Markup.button.callback(
+				menuMessages.subscribeInfo[locale],
+				'get_subscribe_info'
+			)
+		}
+	}
+
+	return Markup.keyboard(
+		[
+			getSubscribeButton(),
 			Markup.button.callback(
 				menuMessages.aboutChannel[locale],
 				'about_channel'
@@ -34,19 +52,18 @@ export const mainMenu = async ({ locale }: ILanguage) => {
 	)
 }
 
-/* export const backMenu = async (locale) => {
-	return Markup.keyboard(
-		[Markup.button.callback(globalMessages.backButton[locale], 'main_menu')],
-		{ columns: 2 }
-	)
-} */
-
-/* export const aboutChannelMenu = async (locale) => {
+export const paymentMenu = async (locale: string) => {
 	return Markup.keyboard(
 		[
-			Markup.button.callback(globalMessages.backButton[locale], 'main_menu'),
-			Markup.button.callback(menuMessages.aboutChat[locale], 'about_chat')
+			Markup.button.callback(
+				paymentMessages.checkPayment[locale],
+				'check_payment'
+			),
+			Markup.button.callback(
+				paymentMessages.cancelPayment[locale],
+				'cancel_payment'
+			)
 		],
 		{ columns: 2 }
-	).reply_markup
-} */
+	)
+}

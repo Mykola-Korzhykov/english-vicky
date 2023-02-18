@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import Telegraf from 'telegraf'
 import Context from '../interfaces/context.interface'
 
 @Injectable()
@@ -16,8 +17,8 @@ export class InvitesService {
 		return newDate.getTime() / 1000
 	}
 
-	async generateInviteLink(ctx: Context, type: 'channel' | 'chat') {
-		const linkName = await `${ctx.from.username} | Invite Link`
+	async generateInviteLink(ctx, userName, type: 'channel' | 'chat') {
+		const linkName = await `${userName} | Invite Link`
 
 		const link = await ctx.telegram.createChatInviteLink(this[`${type}Id`], {
 			name: linkName,

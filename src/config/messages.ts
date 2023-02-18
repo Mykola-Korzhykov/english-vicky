@@ -52,6 +52,11 @@ const menuMessages = {
 		ua: '💸 Купити підписку',
 		ru: '💸 Купить подписку'
 	},
+	subscribeInfo: {
+		en: '🔥 Check subscription',
+		ua: '🔥 Перевірити підписку',
+		ru: '🔥 Проверить подписку'
+	},
 	aboutChannel: {
 		en: '📄 About the channel',
 		ua: '📄 Дізнатись про канал',
@@ -74,4 +79,55 @@ const menuMessages = {
 	}
 }
 
-export { globalMessages, menuMessages }
+const paymentMessages = {
+	checkPayment: {
+		en: '❔ Check payment status',
+		ua: '❔ Перевірити статус оплати',
+		ru: '❔ Проверить статус оплаты'
+	},
+	cancelPayment: {
+		en: '❌ Cancel payment',
+		ua: '❌ Скасувати оплату',
+		ru: '❌ Отменить оплату'
+	},
+	checkPaymentResult: {
+		en: '`Payment #%orderId%`\nPayment status: %statusText%\nAmount: %amount% %currency%',
+		ua: '`Платіж #%orderId%`\nСтатус: %statusText%\nСума: %amount% %currency%',
+		ru: '`Платеж #%orderId%`\nСтатус: %statusText%\nСумма: %amount% %currency%'
+	},
+	created: {
+		en: 'Waiting for payment',
+		ua: 'Очікування платежу',
+		ru: 'Ожидание платежа'
+	},
+	approved: {
+		en: 'Payment was successful',
+		ua: 'Платіж пройшов успішно',
+		ru: 'Платеж прошел успешно'
+	},
+	processing: {
+		en: 'Payment processing',
+		ua: 'Обробка платежу',
+		ru: 'Обработка платежа'
+	},
+	expired: {
+		en: 'Payment has expired',
+		ua: 'Строк дії платежу минув',
+		ru: 'Срок действия платежа истёк'
+	},
+	declined: {
+		en: 'Payment declined',
+		ua: 'Платіж відхилений',
+		ru: 'Платеж отклонен'
+	}
+}
+
+const merchantMessages = {
+	orderDesc: {
+		en: '💸 Subscribe to English with Vicky',
+		ua: '💸 Підписка на English with Vicky',
+		ru: '💸 Подписка на English with Vicky'
+	}
+}
+
+export { globalMessages, menuMessages, paymentMessages, merchantMessages }

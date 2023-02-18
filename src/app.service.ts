@@ -1,18 +1,24 @@
 import { Injectable } from '@nestjs/common'
 import Context from './interfaces/context.interface'
 import { InvitesService } from './invites/invites.service'
-import { selectLanguage, mainMenu } from './app.buttons'
+import { selectLanguage, mainMenu, paymentMenu } from './app.buttons'
 import { HelpersService } from './helpers/helpers.service'
-import { globalMessages, menuMessages } from './config/messages'
+import {
+	globalMessages,
+	menuMessages,
+	paymentMessages
+} from './config/messages'
 import { languages } from './config/languages'
 import { ConfigService } from '@nestjs/config'
+import { PaymentService } from './payment/payment.service'
 
 @Injectable()
 export class AppService {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly helperService: HelpersService,
-		private readonly inviteService: InvitesService
+		private readonly inviteService: InvitesService,
+		private readonly paymentService: PaymentService
 	) {}
 
 	private readonly CHANNEL_ID = this.configService.get<string>('CHANNEL_ID')
@@ -33,28 +39,15 @@ export class AppService {
 
 	async getChannelAccess(ctx: Context) {
 		const locale = ctx.session.locale
+
+		const payLink = await this.paymentService.createPaymentLink(ctx)
+
 		const linkMessage = await this.helperService.replacePlaceholders(
 			globalMessages.givePayLink[locale],
-			{ payLink: '*** Link for pay from Fondy ***' }
+			{ payLink }
 		)
 
-		await ctx.reply(linkMessage)
-
-		const channelInviteLink = await this.inviteService.generateInviteLink(
-			ctx,
-			'channel'
-		)
-		const chatInviteLink = await this.inviteService.generateInviteLink(
-			ctx,
-			'chat'
-		)
-
-		const successMessage = await this.helperService.replacePlaceholders(
-			globalMessages.successPay[locale],
-			{ channelInviteLink, chatInviteLink }
-		)
-
-		await ctx.reply(successMessage)
+		await ctx.reply(linkMessage, await paymentMenu(locale))
 	}
 
 	async aboutChannel(ctx: Context) {
@@ -94,15 +87,10 @@ export class AppService {
 		}
 
 		const locale = ctx.session.locale
-		const localeObject = await this.helperService.getObjectByProperty(
-			languages,
-			'locale',
-			locale
-		)
 
 		const message = globalMessages.greeting[locale]
 
-		ctx.reply(message, await mainMenu(localeObject))
+		ctx.reply(message, await mainMenu(locale))
 		await ctx.deleteMessage()
 	}
 
@@ -116,7 +104,37 @@ export class AppService {
 		await ctx.reply(message, await selectLanguage(ctx.session.locale))
 	}
 
-	async toMenu(ctx: Context) {
-		await this.selectLocale(ctx, false)
+	async checkPayment(ctx: Context) {
+		const locale = ctx.session.locale
+
+		const orderId = ctx.session.orderId
+		const paymentId = ctx.session.paymentId
+
+		const { order_status, amount, currency, rectoken, sender_email } =
+			await this.paymentService.checkPayment(orderId)
+
+		const text = paymentMessages.checkPaymentResult[locale]
+		const statusText = paymentMessages[order_status][locale]
+
+		const message = await this.helperService.replacePlaceholders(text, {
+			orderId,
+			statusText,
+			amount: amount / 100,
+			currency
+		})
+
+		await ctx.reply(message, { parse_mode: 'Markdown' })
+
+		if (order_status === 'approved') {
+			await this.paymentService.successPayment(
+				ctx.from.id,
+				ctx.from.username,
+				orderId,
+				paymentId,
+				rectoken,
+				sender_email,
+				locale
+			)
+		}
 	}
 }

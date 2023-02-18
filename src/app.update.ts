@@ -1,11 +1,13 @@
 import { Controller, Get } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { ModelType } from '@typegoose/typegoose/lib/types'
 import { Action, Hears, InjectBot, Start, Update } from 'nestjs-telegraf'
+import { InjectModel } from 'nestjs-typegoose'
 import { Telegraf } from 'telegraf'
-import { mainMenu, selectLanguage } from './app.buttons'
+import { selectLanguage } from './app.buttons'
 import { AppService } from './app.service'
 import { getLocales } from './config/languages'
-import { menuMessages } from './config/messages'
+import { menuMessages, paymentMessages } from './config/messages'
 import Context from './interfaces/context.interface'
 
 @Update()
@@ -53,6 +55,11 @@ export class AppUpdate {
 	@Hears(Object.values(menuMessages.changeLocale))
 	async changeLocale(ctx: Context) {
 		this.appService.changeLocale(ctx)
+	}
+
+	@Hears(Object.values(paymentMessages.checkPayment))
+	async checkPayment(ctx: Context) {
+		this.appService.checkPayment(ctx)
 	}
 
 	/* @Action('main_menu')
