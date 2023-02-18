@@ -10,7 +10,6 @@ export class PaymentController {
 	@Post('callback')
 	@HttpCode(200)
 	async paymentCallback(@Body() data: CallbackDto) {
-		console.log(data)
 		return await this.paymentService.paymentCallback(data)
 	}
 }

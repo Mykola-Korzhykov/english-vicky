@@ -18,6 +18,7 @@ import { InjectModel } from 'nestjs-typegoose'
 import { SubscriberModel } from 'src/models/subscriber.model'
 import { ModelType } from '@typegoose/typegoose/lib/types'
 import { genSalt, hash, compare } from 'bcrypt'
+import { MerchantDto } from './dto/merchant.dto'
 
 @Injectable()
 export class PaymentService {
@@ -103,7 +104,8 @@ export class PaymentService {
 			await genSalt(10)
 		)
 
-		const { secretKey, userId, userName, locale } = merchant_data
+		const { secretKey, userId, userName, locale }: MerchantDto =
+			JSON.parse(merchant_data)
 		const compareResult = await compare(secretKey, hashSecret)
 
 		if (!compareResult) throw new BadRequestException('Invalid secret key')
