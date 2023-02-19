@@ -7,7 +7,7 @@ import { Telegraf } from 'telegraf'
 import { selectLanguage } from './app.buttons'
 import { AppService } from './app.service'
 import { getLocales } from './config/languages'
-import { menuMessages, paymentMessages } from './config/messages'
+import { menuMessages, paymentMessages, subscribeMessages } from './config/messages'
 import Context from './interfaces/context.interface'
 
 @Update()
@@ -18,52 +18,116 @@ export class AppUpdate {
 		private readonly appService: AppService
 	) {}
 
+	private readonly CHANNEL_ID = this.configService.get<string>('CHANNEL_ID')
+	private readonly CHAT_ID = this.configService.get<string>('CHAT_ID')
+
 	@Start()
 	async startCommand(ctx: Context) {
-		if (!ctx.session.locale) {
-			ctx.session.locale = await this.configService.get('DEFAULT_LOCALE')
-		}
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			ctx.session.userId = Number(ctx.from.id)
 
-		this.appService.startCommand(ctx)
+			if (!ctx.session.locale) {
+				ctx.session.locale = await this.configService.get('DEFAULT_LOCALE')
+			}
+
+			this.appService.startCommand(ctx)
+		}
 	}
 
 	@Hears(Object.values(menuMessages.accessChannel))
 	async getChannelAccess(ctx: Context) {
-		this.appService.getChannelAccess(ctx)
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.getChannelAccess(ctx)
+		}
 	}
 
 	@Hears(Object.values(menuMessages.aboutChannel))
 	async aboutChannel(ctx: Context) {
-		this.appService.aboutChannel(ctx)
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.aboutChannel(ctx)
+		}
 	}
 
 	@Hears(Object.values(menuMessages.aboutChat))
 	async aboutChat(ctx: Context) {
-		this.appService.aboutChat(ctx)
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.aboutChat(ctx)
+		}
 	}
 
 	@Hears(Object.values(menuMessages.support))
 	async getSupport(ctx: Context) {
-		this.appService.getSupport(ctx)
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.getSupport(ctx)
+		}
 	}
 
 	@Action(getLocales())
 	async selectLocale(ctx: Context) {
-		this.appService.selectLocale(ctx)
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.selectLocale(ctx)
+		}
 	}
 
 	@Hears(Object.values(menuMessages.changeLocale))
 	async changeLocale(ctx: Context) {
-		this.appService.changeLocale(ctx)
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.changeLocale(ctx)
+		}
 	}
 
 	@Hears(Object.values(paymentMessages.checkPayment))
 	async checkPayment(ctx: Context) {
-		this.appService.checkPayment(ctx)
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.checkPayment(ctx)
+		}
 	}
 
-	/* @Action('main_menu')
-	async toMenu(ctx: Context) {
-		this.appService.toMenu(ctx)
-	} */
+	@Hears(Object.values(paymentMessages.cancelPayment))
+	async cancelPayment(ctx: Context) {
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.cancelPayment(ctx)
+		}
+	}
+
+	@Hears('/check_subscribe')
+	async checkSubscribers(ctx: Context) {
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.checkSubscribers(this.bot)
+		}
+	}
+
+	@Hears(Object.values(menuMessages.extendSubscribe))
+	async extendSubscribe(ctx: Context) {
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.extendSubscribe(ctx)
+		}
+	}
+
+	@Hears(Object.values(menuMessages.subscribeInfo))
+	async checkSubscribe(ctx: Context) {
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.checkSubscribe(ctx)
+		}
+	}
+
+	@Hears(Object.values(menuMessages.cancelSubscribe))
+	async cancelSubscribe(ctx: Context) {
+		const currentChatId = String(ctx.chat.id)
+		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
+			this.appService.cancelSubscribe(ctx)
+		}
+	}
 }

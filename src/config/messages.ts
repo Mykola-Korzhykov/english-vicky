@@ -43,6 +43,16 @@ const globalMessages = {
 		en: '🔙 Back',
 		ua: '🔙 Назад',
 		ru: '🔙 Назад'
+	},
+	on: {
+		en: 'enabled',
+		ua: 'увімкнена',
+		ru: 'включена'
+	},
+	off: {
+		en: 'disabled',
+		ua: 'вимкнена',
+		ru: 'выключена'
 	}
 }
 
@@ -56,6 +66,16 @@ const menuMessages = {
 		en: '🔥 Check subscription',
 		ua: '🔥 Перевірити підписку',
 		ru: '🔥 Проверить подписку'
+	},
+	extendSubscribe: {
+		en: '💸 Renew your subscription',
+		ua: '💸 Продовжити підписку',
+		ru: '💸 Продлить подписку'
+	},
+	cancelSubscribe: {
+		en: '❌ Cancel subscription',
+		ua: '❌ Скасувати підписку',
+		ru: '❌ Отменить подписку'
 	},
 	aboutChannel: {
 		en: '📄 About the channel',
@@ -122,6 +142,49 @@ const paymentMessages = {
 	}
 }
 
+const subscribeMessages = {
+	autoPayApproved: {
+		en: 'Your subscription has been automatically renewed for 1 month',
+		ua: 'Твоя підписка була автоматично продовжена на 1 місяць',
+		ru: 'Твоя подписка была автоматически продлена на 1 месяц'
+	},
+	autoPayFailed: {
+		en: 'Your subscription will end tomorrow, we failed to auto-pay, please renew your subscription manually',
+		ua: 'Твоя підписка завтра закінчиться, у нас не вийшло провести авто-оплату, продовжи підписку вручну',
+		ru: 'Твоя подписка завтра закончится, у нас не вышло провести авто-оплату, продли подписку вручную'
+	},
+	extendApproved: {
+		en: 'Subscription has been renewed for 1 month, thank you!',
+		ua: 'Підписка була продовжена на 1 місяць, дякую!',
+		ru: 'Подписка была продлена на 1 месяц, спасибо!'
+	},
+	soonExpired: {
+		en: 'Your subscription ends tomorrow, please renew it manually',
+		ua: 'Твоя підписка завтра закінчиться, продовжи її вручну',
+		ru: 'Твоя подписка завтра закончится, продли ее вручную'
+	},
+	cancel: {
+		en: 'Subscription has been successfully purchased! Now the money will not be debited automatically',
+		ua: 'Авто-оплата була успішно вимкнена! Тепер гроші не списуватимуться автоматично',
+		ru: 'Авто-оплата была успешно выключена! Теперь деньги не будут списываться автоматически'
+	},
+	expired: {
+		en: 'Your subscription has expired',
+		ua: 'Твоя підписка закінчилася',
+		ru: 'Твоя подписка закончилась'
+	},
+	exists: {
+		en: 'You already have a subscription',
+		ua: 'У тебе вже є підписка',
+		ru: 'У тебя уже есть подписка'
+	},
+	check: {
+		en: '`Subscription to English with Vicky`\nAmount: %amount% %currency%\nAuto-payment: %autoPay%\nEnd date: %expireDate%',
+		ua: '`Підписка на English with Vicky`\nСума: %amount% %currency%\nАвто-оплата: %autoPay%\nДата закінчення: %expireDate%',
+		ru: '`Подписка на English with Vicky`\nСумма: %amount% %currency%\nАвто-оплата: %autoPay%\nДата окончания: %expireDate%'
+	}
+}
+
 const merchantMessages = {
 	orderDesc: {
 		en: '💸 Subscribe to English with Vicky',
@@ -130,4 +193,4 @@ const merchantMessages = {
 	}
 }
 
-export { globalMessages, menuMessages, paymentMessages, merchantMessages }
+export { globalMessages, menuMessages, paymentMessages, subscribeMessages, merchantMessages }

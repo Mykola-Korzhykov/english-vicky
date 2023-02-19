@@ -3,4 +3,5 @@ export class MerchantDto {
 	userId: string
 	userName: string
 	locale: string
+	extend: boolean
 }

@@ -5,7 +5,7 @@ export interface SubscriberModel extends Base {}
 
 export class SubscriberModel extends TimeStamps {
 	@prop({ unique: true })
-	userId: string
+	userId: number
 
 	@prop({ unique: true })
 	userName: string
@@ -13,11 +13,14 @@ export class SubscriberModel extends TimeStamps {
 	@prop()
 	expireDate: Date
 
-	@prop({ unique: true })
-	orderId: string
+	@prop()
+	locale: string
 
 	@prop({ unique: true })
-	paymentId: string
+	orderId: number
+
+	@prop({ unique: true })
+	paymentId: number
 
 	@prop({ unique: true })
 	rectoken: string

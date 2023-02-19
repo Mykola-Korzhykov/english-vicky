@@ -20,12 +20,40 @@ export class HelpersService {
 	}
 
 	async getNextMonth(date) {
-		const nextMonth = new Date(
-			date.getFullYear(),
-			date.getMonth() + 1,
-			date.getDate()
-		)
+		const nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate())
 
 		return this.formatDate(nextMonth)
+	}
+
+	async isJsonString(string) {
+		try {
+			JSON.parse(string)
+		} catch (e) {
+			return false
+		}
+		return true
+	}
+
+	async isYesterdayISO(dateISO) {
+		const date = new Date()
+		const yesterday = new Date(dateISO)
+		yesterday.setDate(yesterday.getDate() - 2)
+
+		return (
+			date.getFullYear() === yesterday.getFullYear() &&
+			date.getMonth() === yesterday.getMonth() &&
+			date.getDate() === yesterday.getDate()
+		)
+	}
+
+	async isCurrentDateThanISO(dateISO) {
+		const currentDate = new Date()
+		const inputDate = new Date(dateISO)
+
+		return currentDate.getTime() > inputDate.getTime()
+	}
+
+	async getCurrentUnixTime() {
+		return Math.floor(Date.now() / 1000) + 10
 	}
 }
