@@ -190,10 +190,10 @@ export class AppService {
 		const autoPay = user.isSubscribed ? globalMessages.on[locale] : globalMessages.off[locale]
 
 		const message = await this.helperService.replacePlaceholders(subscribeMessages.check[locale], {
-			amount: await this.configService.get('PAYMENT_AMOUNT'),
+			amount: (await this.configService.get('PAYMENT_AMOUNT')) / 100,
 			currency: await this.configService.get('PAYMENT_CURRENCY'),
 			autoPay,
-			expireDate: '-----'
+			expireDate: await this.helperService.convertDateToCustomFormat(user.expireDate)
 		})
 
 		await ctx.reply(message, {
