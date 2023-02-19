@@ -37,12 +37,10 @@ export class HelpersService {
 	async isYesterdayISO(dateISO) {
 		const date = new Date()
 		const yesterday = new Date(dateISO)
-		yesterday.setDate(yesterday.getDate() - 2)
+		yesterday.setDate(yesterday.getDate() - 1)
 
 		return (
-			date.getFullYear() === yesterday.getFullYear() &&
-			date.getMonth() === yesterday.getMonth() &&
-			date.getDate() === yesterday.getDate()
+			date.getFullYear() === yesterday.getFullYear() && date.getMonth() === yesterday.getMonth() && date.getDate() === yesterday.getDate()
 		)
 	}
 
@@ -58,10 +56,10 @@ export class HelpersService {
 	}
 
 	async convertDateToCustomFormat(dateString) {
-		const date = new Date(dateString);
-		const day = date.getDate().toString().padStart(2, '0');
-		const month = (date.getMonth() + 1).toString().padStart(2, '0');
-		const year = date.getFullYear();
-		return `${day}.${month}.${year}`;
+		const date = new Date(dateString)
+		const day = date.getDate().toString().padStart(2, '0')
+		const month = (date.getMonth() + 1).toString().padStart(2, '0')
+		const year = date.getFullYear()
+		return `${day}.${month}.${year}`
 	}
 }
