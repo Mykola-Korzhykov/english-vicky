@@ -184,9 +184,9 @@ const subscribeMessages = {
 		ru: 'У тебя уже есть подписка'
 	},
 	check: {
-		en: '`Subscription to English with Vicky`\nAmount: %amount% %currency%\nAuto-payment: %autoPay%\nEnd date: %expireDate%',
-		ua: '`Підписка на English with Vicky`\nСума: %amount% %currency%\nАвто-оплата: %autoPay%\nДата закінчення: %expireDate%',
-		ru: '`Подписка на English with Vicky`\nСумма: %amount% %currency%\nАвто-оплата: %autoPay%\nДата окончания: %expireDate%'
+		en: '`Subscription to English with Vicky`\nAmount: %amount% %currency%\nAutomatic subscription: %autoPay%\nEnd date: %expireDate%',
+		ua: '`Підписка на English with Vicky`\nСума: %amount% %currency%\nАвтоматична підписка: %autoPay%\nДата закінчення: %expireDate%',
+		ru: '`Подписка на English with Vicky`\nСумма: %amount% %currency%\nАвтоматическая подписка: %autoPay%\nДата окончания: %expireDate%'
 	}
 }
 
