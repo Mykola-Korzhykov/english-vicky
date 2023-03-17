@@ -149,12 +149,12 @@ export class AppService {
 	async checkSubscribers(bot) {
 		const subscribers = await this.subscriberModel.find()
 		subscribers.forEach(async ({ userId, userName, expireDate, locale, rectoken, isSubscribed }) => {
-			if ((await this.helperService.isYesterdayISO(expireDate, 2))) {
+			if ((await this.helperService.isYesterdayISO(expireDate, 3))) {
 				bot.telegram.sendMessage(userId, subscribeMessages.soonAutoPay[locale], await mainMenu(locale, true, true))
 				return
 			}
 
-			if ((await this.helperService.isYesterdayISO(expireDate))) {
+			if ((await this.helperService.isYesterdayISO(expireDate, 2))) {
 				const { order_status } = await this.paymentService.recurring(rectoken, locale)
 
 				if (order_status === 'approved') {
