@@ -149,7 +149,12 @@ export class AppService {
 	async checkSubscribers(bot) {
 		const subscribers = await this.subscriberModel.find()
 		subscribers.forEach(async ({ userId, userName, expireDate, locale, rectoken, isSubscribed }) => {
-			if (isSubscribed && (await this.helperService.isYesterdayISO(expireDate))) {
+			if ((await this.helperService.isYesterdayISO(expireDate, 2))) {
+				bot.telegram.sendMessage(userId, subscribeMessages.soonAutoPay[locale], await mainMenu(locale, true, true))
+				return
+			}
+
+			if ((await this.helperService.isYesterdayISO(expireDate))) {
 				const { order_status } = await this.paymentService.recurring(rectoken, locale)
 
 				if (order_status === 'approved') {
@@ -163,10 +168,10 @@ export class AppService {
 				return
 			}
 
-			if (!isSubscribed && (await this.helperService.isYesterdayISO(expireDate))) {
+			/* if (!isSubscribed && (await this.helperService.isYesterdayISO(expireDate))) {
 				bot.telegram.sendMessage(userId, subscribeMessages.soonExpired[locale], await mainMenu(locale, true, false))
 				return
-			}
+			} */
 
 			if (new Date() > expireDate) {
 				bot.telegram.kickChatMember(this.CHANNEL_ID, userId, await this.helperService.getCurrentUnixTime())
@@ -219,5 +224,20 @@ export class AppService {
 		await user.update({ isSubscribed: false }).exec()
 
 		await ctx.reply(subscribeMessages.cancel[locale], await mainMenu(locale, true, false))
+	}
+
+	async runCheckSubscribers(bot) {
+		const midnight = new Date();
+		midnight.setHours(24, 0, 0, 0);
+	  
+		const timeUntilMidnight = midnight.getTime() - new Date().getTime();
+	  
+		setTimeout(() => {
+		  this.checkSubscribers(bot)
+	  
+		  setInterval(() => {
+			this.checkSubscribers(bot)
+		  }, 60000); // 24 * 60 * 60 * 1000
+		}, 60000); // timeUntilMidnight
 	}
 }

@@ -27,13 +27,13 @@ export const mainMenu = async (locale: string, isSubscribe: boolean = false, aut
 	const getCancelButton = () => {
 		const aboutChannel = Markup.button.callback(menuMessages.aboutChannel[locale], 'about_channel')
 
-		if (isSubscribe && autoPay) {
+		if (autoPay) {
 			return [Markup.button.callback(menuMessages.cancelSubscribe[locale], 'cancel_subscribe'), aboutChannel]
 		}
 
-		if (isSubscribe && !autoPay) {
+		/* if (isSubscribe && !autoPay) {
 			return [Markup.button.callback(menuMessages.extendSubscribe[locale], 'extend_subscribe'), aboutChannel]
-		}
+		} */
 
 		return [aboutChannel]
 	}

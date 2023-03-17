@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, OnModuleInit } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ModelType } from '@typegoose/typegoose/lib/types'
 import { Action, Hears, InjectBot, Start, Update } from 'nestjs-telegraf'
@@ -11,7 +11,7 @@ import { menuMessages, paymentMessages, subscribeMessages } from './config/messa
 import Context from './interfaces/context.interface'
 
 @Update()
-export class AppUpdate {
+export class AppUpdate implements OnModuleInit {
 	constructor(
 		@InjectBot() private readonly bot: Telegraf<Context>,
 		private readonly configService: ConfigService,
@@ -20,6 +20,10 @@ export class AppUpdate {
 
 	private readonly CHANNEL_ID = this.configService.get<string>('CHANNEL_ID')
 	private readonly CHAT_ID = this.configService.get<string>('CHAT_ID')
+
+	onModuleInit() {
+		this.appService.runCheckSubscribers(this.bot);
+	}
 
 	@Start()
 	async startCommand(ctx: Context) {
@@ -99,13 +103,13 @@ export class AppUpdate {
 		}
 	}
 
-	@Hears('/check_subscribe')
+	/* @Hears('/check_subscribe')
 	async checkSubscribers(ctx: Context) {
 		const currentChatId = String(ctx.chat.id)
 		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
 			this.appService.checkSubscribers(this.bot)
 		}
-	}
+	} */
 
 	@Hears(Object.values(menuMessages.extendSubscribe))
 	async extendSubscribe(ctx: Context) {
@@ -129,5 +133,20 @@ export class AppUpdate {
 		if (currentChatId !== this.CHAT_ID && currentChatId !== this.CHANNEL_ID) {
 			this.appService.cancelSubscribe(ctx)
 		}
+	}
+
+	async runCheckSubscribers() {
+		const midnight = new Date();
+		midnight.setHours(24, 0, 0, 0);
+	
+		const timeUntilMidnight = midnight.getTime() - new Date().getTime();
+	  
+		setTimeout(() => {
+		  this.appService.checkSubscribers(this.bot)
+	  
+		  setInterval(() => {
+			this.appService.checkSubscribers(this.bot);
+		  }, 60000); // 24 * 60 * 60 * 1000
+		}, 60000); // timeUntilMidnight
 	}
 }
