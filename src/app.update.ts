@@ -139,14 +139,14 @@ export class AppUpdate implements OnModuleInit {
 		const midnight = new Date();
 		midnight.setHours(24, 0, 0, 0);
 	
-		const timeUntilMidnight = midnight.getTime() - new Date().getTime();
+		const timeUntilMidnight = midnight.getTime() - new Date().getTime() + (60 * 60 * 1000);
 	  
 		setTimeout(() => {
 		  this.appService.checkSubscribers(this.bot)
 	  
 		  setInterval(() => {
 			this.appService.checkSubscribers(this.bot);
-		  }, 60000); // 24 * 60 * 60 * 1000
-		}, 60000); // timeUntilMidnight
+		  }, 25 * 60 * 60 * 1000); // 25 * 60 * 60 * 1000 | 60000
+		}, timeUntilMidnight); // timeUntilMidnight | 60000
 	}
 }
