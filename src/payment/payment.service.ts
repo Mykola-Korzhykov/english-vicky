@@ -99,9 +99,9 @@ export class PaymentService {
 		const paymentId = payment_id
 		const senderEmail = sender_email
 
-		if (order_status !== 'approved' && order_status !== 'processing') {
+		/* if (order_status !== 'approved' && order_status !== 'processing' && order_status !== 'declined') { 
 			this.bot.telegram.sendMessage(userId, paymentMessages[order_status][locale], await mainMenu(locale))
-		}
+		} */
 
 		if (order_status === 'approved') {
 			await this.successPayment(userId, userName, orderId, paymentId, rectoken, senderEmail, locale, extend)
