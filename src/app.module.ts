@@ -13,6 +13,7 @@ import { getMongoConfig } from './config/mongo.config'
 import { PaymentService } from './payment/payment.service'
 import { TypegooseModule } from 'nestjs-typegoose/dist/typegoose.module'
 import { SubscriberModel } from './models/subscriber.model'
+import { AppController } from './app.controller'
 
 @Module({
 	imports: [
@@ -39,7 +40,7 @@ import { SubscriberModel } from './models/subscriber.model'
 		HelpersModule,
 		PaymentModule
 	],
-	controllers: [],
+	controllers: [AppController],
 	providers: [
 		AppService,
 		AppUpdate,

@@ -12,7 +12,7 @@ export class InvitesService {
 
 	private async getExpireDate() {
 		const currentDate = new Date()
-		const newDate = new Date(currentDate.getTime() + 60 * 60 * 1000)
+		const newDate = new Date(currentDate.getTime() + 1000 * 60 * 60 * 24) // 60 * 60 * 1000
 
 		return newDate.getTime() / 1000
 	}

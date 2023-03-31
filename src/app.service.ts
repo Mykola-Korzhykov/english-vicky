@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common'
+import { InjectBot } from 'nestjs-telegraf'
+import { Telegraf } from 'telegraf'
 import Context from './interfaces/context.interface'
 import { InvitesService } from './invites/invites.service'
 import { selectLanguage, mainMenu, paymentMenu } from './app.buttons'
@@ -19,7 +21,8 @@ export class AppService {
 		private readonly inviteService: InvitesService,
 		private readonly paymentService: PaymentService,
 		@InjectModel(SubscriberModel)
-		private readonly subscriberModel: ModelType<SubscriberModel>
+		private readonly subscriberModel: ModelType<SubscriberModel>,
+		@InjectBot() private readonly bot: Telegraf<Context>
 	) {}
 
 	private readonly CHANNEL_ID = this.configService.get<string>('CHANNEL_ID')
@@ -239,5 +242,19 @@ export class AppService {
 			this.checkSubscribers(bot)
 		  }, 60000); // 24 * 60 * 60 * 1000
 		}, 60000); // timeUntilMidnight
+	}
+
+	async kickMember({userId, locale}) {
+		if(!userId || !locale) return 'Not all required fields are filled';
+
+		const user = await this.subscriberModel.findOne({ userId })
+		if(!user) return 'User not found';
+
+		this.bot.telegram.kickChatMember(this.CHANNEL_ID, userId, await this.helperService.getCurrentUnixTime())
+		this.bot.telegram.kickChatMember(this.CHAT_ID, userId, await this.helperService.getCurrentUnixTime())
+		this.bot.telegram.sendMessage(userId, subscribeMessages.expired[locale], await mainMenu(locale, false))
+		await this.subscriberModel.findOneAndDelete({ userId }).exec()
+
+		return 'User has been kicked'
 	}
 }
