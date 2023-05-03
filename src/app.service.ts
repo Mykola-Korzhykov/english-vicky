@@ -171,10 +171,10 @@ export class AppService {
 				return
 			}
 
-			if (!isSubscribed && (await this.helperService.isYesterdayISO(expireDate))) {
+			/*if (!isSubscribed && (await this.helperService.isYesterdayISO(expireDate))) {
 				bot.telegram.sendMessage(userId, subscribeMessages.soonExpired[locale], await mainMenu(locale, true, false))
 				return
-			}
+			}*/
 
 			if (new Date() > expireDate) {
 				bot.telegram.kickChatMember(this.CHANNEL_ID, userId, await this.helperService.getCurrentUnixTime())
